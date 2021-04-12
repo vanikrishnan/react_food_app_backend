@@ -13,7 +13,7 @@ opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.TOKEN_SECRET;
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
   console.log(jwt_payload, "jwt_payload")
-    users.findOne({email: jwt_payload.username}, function(err, user) {
+    users.findOne({email: jwt_payload.email}, function(err, user) {
     console.log(user, "user")
         if (err) {
             return done(err, false);
@@ -36,5 +36,7 @@ router.get('/', function(req, res, next) {
 router.post('/createUser', userController.createUser);
 router.post('/login', userController.login);
 router.get('/foodItems', passport.authenticate('jwt', { session: false }), userController.getFoodItems);
+router.get('/logout', passport.authenticate('jwt', { session: false }), userController.logout);
+router.post('/updateUser', passport.authenticate('jwt', { session: false }), userController.updateUser);
 
 module.exports = router;

@@ -46,7 +46,12 @@ const login = (req, res, next) => {
         bcrypt.compare(req.body.password, user[0].password).then(function(result) {
         if (result) {
             console.log("matched");
-            const token = generateAccessToken({ username: req.body.email });
+            const payload = { 
+                email: req.body.email, 
+                username: user[0].name,
+                cartDetails: (user[0].cartDetails && user[0].cartDetails.length > 0) ?  user[0].cartDetails: []
+            }
+            const token = generateAccessToken(payload);
             console.log(token, 'token')
             res.json({
                 token: token
@@ -77,6 +82,26 @@ const getFoodItems = (req, res, next) => {
     })
 }
 
+const updateUser = (req, res, next) => {
+    console.log(req.body, "req.body")
+    users.updateOne({email: req.body.email}, {$set: {cartDetails: req.body.cartDetails}})
+    .then(response => {
+        console.log(response,"response")
+        res.status(200).send("Updated Successfully")
+    })
+    .catch(err => {
+        console.log(err,"err")
+        res.status(403).send({error: err})
+    })
+}
+
+const logout = (req, res, next) => {
+    console.log("in logout")
+    req.logout();
+    res.status(200).send("Logged Out")
+    // res.redirect('/');  
+}
+
 module.exports = {
-    createUser, login, getFoodItems
+    createUser, login, getFoodItems, logout, updateUser
 }

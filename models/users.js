@@ -1,6 +1,18 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema;
 
+const cartSchema = new schema({
+    itemname: {
+        type: String
+    },
+    price: {
+        type: Number
+    },
+    count: {
+        type: Number
+    }
+})
+
 const userSchema = new schema({
     name: {
         type: String
@@ -13,6 +25,9 @@ const userSchema = new schema({
     },
     contactNo: {
         type: Number
+    },
+    cartDetails: {
+        type: [cartSchema]
     }
 })
 
