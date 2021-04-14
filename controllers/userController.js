@@ -47,6 +47,7 @@ const login = (req, res, next) => {
         if (result) {
             console.log("matched");
             const payload = { 
+                exp: Math.floor(Date.now() / 1000) + (60 * 15),
                 email: req.body.email, 
                 username: user[0].name,
                 cartDetails: (user[0].cartDetails && user[0].cartDetails.length > 0) ?  user[0].cartDetails: []
